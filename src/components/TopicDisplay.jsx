@@ -1,6 +1,10 @@
 import React from "react";
 
 const TopicDisplay = ({ parsedData }) => {
+  const handleClick = (gameType) => {
+    const gameFile = `${parsedData.board}-${parsedData.grade}-${parsedData.subject}-${gameType}-${parsedData.title}`;
+    console.log(gameFile);
+  };
   return (
     <div className="container mx-auto">
       <div className="flex flex-col items-center">
@@ -38,6 +42,7 @@ const TopicDisplay = ({ parsedData }) => {
                   <button
                     key={index}
                     className="mr-2 mb-2 bg-rose-500 text-white px-4 py-2 rounded"
+                    onClick={() => handleClick(gameType)}
                   >
                     {gameType}
                   </button>
