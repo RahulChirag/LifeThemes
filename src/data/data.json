@@ -1,0 +1,156 @@
+[
+  {
+    "id": 1,
+    "board": "CBSE",
+    "grade": "A",
+    "subject": "Math",
+    "chapter": "1",
+    "title": "Calculus Basics",
+    "gameTypes": ["MCQ", "Right or Wrong", "Others"]
+  },
+  {
+    "id": 2,
+    "title": "Biology 101",
+    "subject": "Science",
+    "board": "CBSE",
+    "grade": "B",
+    "chapter": "2",
+    "gameTypes": ["MCQ", "Right or Wrong"]
+  },
+  {
+    "id": 3,
+    "title": "Shakespearean Literature",
+    "subject": "English",
+    "board": "ICSE",
+    "grade": "A",
+    "chapter": "3",
+    "gameTypes": ["Matching", "Fill in the blanks", "Others"]
+  },
+  {
+    "id": 4,
+    "title": "World History",
+    "subject": "History",
+    "board": "State",
+    "grade": "C",
+    "chapter": "4",
+    "gameTypes": ["MCQ", "True or False", "Others"]
+  },
+  {
+    "id": 5,
+    "title": "Impressionist Art",
+    "subject": "Art",
+    "board": "State",
+    "grade": "A",
+    "chapter": "5",
+    "gameTypes": ["Matching", "Multiple Answer", "Others"]
+  },
+  {
+    "id": 6,
+    "title": "Chemistry Fundamentals",
+    "subject": "Science",
+    "board": "ICSE",
+    "grade": "B",
+    "chapter": "6",
+    "gameTypes": ["MCQ", "Right or Wrong"]
+  },
+  {
+    "id": 7,
+    "title": "Advanced Algebra",
+    "subject": "Math",
+    "board": "CBSE",
+    "grade": "C",
+    "chapter": "7",
+    "gameTypes": ["MCQ", "True or False", "Others"]
+  },
+  {
+    "id": 8,
+    "title": "Modern Poetry",
+    "subject": "English",
+    "board": "State",
+    "grade": "B",
+    "chapter": "8",
+    "gameTypes": ["Matching", "Fill in the blanks", "Others"]
+  },
+  {
+    "id": 9,
+    "title": "Ancient Civilizations",
+    "subject": "History",
+    "board": "CBSE",
+    "grade": "A",
+    "chapter": "9",
+    "gameTypes": ["MCQ", "Right or Wrong"]
+  },
+  {
+    "id": 10,
+    "title": "Renaissance Art",
+    "subject": "Art",
+    "board": "ICSE",
+    "grade": "C",
+    "chapter": "10",
+    "gameTypes": ["MCQ", "Right or Wrong"]
+  },
+  {
+    "id": 11,
+    "title": "Introduction to Physics",
+    "subject": "Science",
+    "board": "CBSE",
+    "grade": "B",
+    "chapter": "11",
+    "gameTypes": ["MCQ", "Matching"]
+  },
+  {
+    "id": 12,
+    "title": "American Literature",
+    "subject": "English",
+    "board": "State",
+    "grade": "A",
+    "chapter": "12",
+    "gameTypes": ["Fill in the blanks", "True or False"]
+  },
+  {
+    "id": 13,
+    "title": "European History",
+    "subject": "History",
+    "board": "CBSE",
+    "grade": "C",
+    "chapter": "13",
+    "gameTypes": ["MCQ", "Right or Wrong"]
+  },
+  {
+    "id": 14,
+    "title": "Contemporary Art",
+    "subject": "Art",
+    "board": "ICSE",
+    "grade": "B",
+    "chapter": "14",
+    "gameTypes": ["Multiple Answer", "Matching"]
+  },
+  {
+    "id": 15,
+    "title": "Geometry Fundamentals",
+    "subject": "Math",
+    "board": "State",
+    "grade": "A",
+    "chapter": "15",
+    "gameTypes": ["MCQ", "True or False"]
+  },
+  {
+    "id": 16,
+    "title": "Cell Biology",
+    "subject": "Science",
+    "board": "CBSE",
+    "grade": "C",
+    "chapter": "16",
+    "gameTypes": ["MCQ", "Right or Wrong"],
+    "imgUrl": "placeholder.png"
+  },
+  {
+    "id": 17,
+    "title": "British Literature",
+    "subject": "English",
+    "board": "State",
+    "grade": "B",
+    "chapter": "17",
+    "gameTypes": ["Matching", "Fill in the blanks"]
+  }
+]
