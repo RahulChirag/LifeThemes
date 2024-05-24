@@ -13,6 +13,7 @@ const subjectTagsData = [
 ];
 
 const TopicSearch = () => {
+  const inputRef = useRef(null);
   const [data, setData] = useState(jsonData);
   const [inputValue, setInputValue] = useState("");
   const [selectedTag, setSelectedTag] = useState(null);
