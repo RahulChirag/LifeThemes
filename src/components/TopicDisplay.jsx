@@ -1,10 +1,22 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const TopicDisplay = ({ parsedData }) => {
+  const navigate = useNavigate();
+
   const handleClick = (gameType) => {
-    const gameFile = `${parsedData.board}-${parsedData.grade}-${parsedData.subject}-${gameType}-${parsedData.title}`;
-    console.log(gameFile);
+    if (parsedData.isStaterContent === true) {
+      const gameFile = `${parsedData.board}-${parsedData.grade}-${parsedData.subject}-${gameType}-${parsedData.title}`;
+      const serializedData = encodeURIComponent(gameFile);
+      const isStarterContent = parsedData.isStaterContent ? "true" : "false";
+      navigate(
+        `/teacher/${parsedData.id}/live/${serializedData}/${isStarterContent}`
+      );
+    } else {
+      console.log(parsedData.isStaterContent);
+    }
   };
+
   return (
     <div className="container mx-auto">
       <div className="flex flex-col items-center">

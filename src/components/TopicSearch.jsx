@@ -63,7 +63,9 @@ const TopicSearch = () => {
 
   const handleOnOptionSelect = (option) => {
     const serializedData = encodeURIComponent(JSON.stringify(option.id));
-    navigate(`/teacher/${serializedData}`);
+    const url = `/teacher/${serializedData}`;
+    console.log("Navigation URL:", url);
+    navigate(url);
   };
 
   return (

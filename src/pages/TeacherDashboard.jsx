@@ -9,9 +9,10 @@ import jsonData from "../data/data.json";
 const TeacherDashboard = () => {
   const { handleLogOut, user, setUsername } = useUserAuth();
   const navigate = useNavigate();
-  const { data } = useParams(); // Get the optional parameter
+  const { data, game } = useParams();
   const [newUsername, setNewUsername] = useState("");
   const [parsedData, setParsedData] = useState(null);
+  const [isGame, setIsGame] = useState(false);
 
   useEffect(() => {
     if (data) {
@@ -26,7 +27,14 @@ const TeacherDashboard = () => {
   }, [data]);
 
   useEffect(() => {
-    // Update newUsername state when user object changes
+    if (game) {
+      setIsGame(true);
+    } else {
+      setIsGame(false);
+    }
+  }, [game]);
+
+  useEffect(() => {
     if (user && user.username) {
       setNewUsername(user.username);
     }
@@ -64,7 +72,11 @@ const TeacherDashboard = () => {
       <div className="pt-24 container mx-auto px-4 py-8">
         {parsedData ? (
           <>
-            <TopicDisplay parsedData={parsedData} />
+            {isGame ? (
+              <h1>Game: {decodeURIComponent(game)}</h1>
+            ) : (
+              <TopicDisplay parsedData={parsedData} />
+            )}
           </>
         ) : (
           <>

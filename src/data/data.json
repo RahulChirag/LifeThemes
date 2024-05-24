@@ -132,7 +132,9 @@
     "board": "State",
     "grade": "A",
     "chapter": "15",
-    "gameTypes": ["MCQ", "True or False"]
+    "gameTypes": ["MCQ", "True or False"],
+    "imgUrl": "placeholder.png",
+    "isStaterContent": false
   },
   {
     "id": 16,
@@ -142,7 +144,8 @@
     "grade": "C",
     "chapter": "16",
     "gameTypes": ["MCQ", "Right or Wrong"],
-    "imgUrl": "placeholder.png"
+    "imgUrl": "placeholder.png",
+    "isStaterContent": true
   },
   {
     "id": 17,

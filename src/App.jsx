@@ -70,6 +70,14 @@ function App() {
           </ProtectedRoute>
         }
       />
+      <Route
+        path="/teacher/:data/live/:game/:isStarterContent"
+        element={
+          <ProtectedRoute>
+            <TeacherDashboard />
+          </ProtectedRoute>
+        }
+      />
     </Routes>
   );
 }
