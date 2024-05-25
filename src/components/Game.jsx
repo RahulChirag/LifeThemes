@@ -15,6 +15,9 @@ const Game = (game, StarterContent) => {
         .padStart(6, "0")
     )
   );
+  const [generateLink, setGenerateLink] = useState(
+    `http://localhost:5173/live/${generatedOtp}`
+  );
 
   const host = async (otp) => {
     await setLobby(otp, game.game, StarterContent);
@@ -33,6 +36,7 @@ const Game = (game, StarterContent) => {
         .padStart(6, "0")
     );
     setGeneratedOtp(newotp);
+    setGenerateLink(`http://localhost:5173/live/${newotp}`);
   };
 
   const initiateShowLobby = useCallback(async () => {
@@ -53,6 +57,7 @@ const Game = (game, StarterContent) => {
     <>
       <h1>Game: {decodeURIComponent(game.game)}</h1>
       <h1>{generatedOtp}</h1>
+      <h1>{generateLink}</h1>
       {hosting && (
         <button className="bg-green-300" onClick={() => host(generatedOtp)}>
           Host Live

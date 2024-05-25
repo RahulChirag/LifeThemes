@@ -7,6 +7,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import StudentDashboard from "./pages/StudentDashboard";
 import TeacherDashboard from "./pages/TeacherDashboard";
 import LoadingSpinner from "./components/LoadingSpinner";
+import Live from "./pages/Live";
 
 function App() {
   const { user } = useUserAuth();
@@ -78,6 +79,7 @@ function App() {
           </ProtectedRoute>
         }
       />
+      <Route path="/live/:data" element={<Live />} />
     </Routes>
   );
 }
