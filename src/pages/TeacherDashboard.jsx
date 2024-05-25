@@ -5,14 +5,17 @@ import Header from "../components/Header";
 import TopicSearch from "../components/TopicSearch";
 import TopicDisplay from "../components/TopicDisplay";
 import jsonData from "../data/data.json";
+import Game from "../components/Game";
 
 const TeacherDashboard = () => {
   const { handleLogOut, user, setUsername } = useUserAuth();
   const navigate = useNavigate();
-  const { data, game } = useParams();
+  const { data, game, isStarterContent } = useParams();
   const [newUsername, setNewUsername] = useState("");
   const [parsedData, setParsedData] = useState(null);
   const [isGame, setIsGame] = useState(false);
+
+  console.log(isStarterContent);
 
   useEffect(() => {
     if (data) {
@@ -73,7 +76,7 @@ const TeacherDashboard = () => {
         {parsedData ? (
           <>
             {isGame ? (
-              <h1>Game: {decodeURIComponent(game)}</h1>
+              <Game game={game} StarterContent={isStarterContent} />
             ) : (
               <TopicDisplay parsedData={parsedData} />
             )}
