@@ -1,7 +1,10 @@
 import React from "react";
+import { useParams } from "react-router-dom";
 
 const Live = () => {
-  return <div>Live</div>;
+  const { data } = useParams();
+
+  return <div>OTP: {data}</div>;
 };
 
 export default Live;

@@ -133,6 +133,7 @@ export function UserAuthContextProvider({ children }) {
         teacherId: user.uid,
         studentsJoined: [],
         isLive: true,
+        startGame: false,
         isStarterContent: isStarterContent, // Set the boolean value here
         game: game,
       });
@@ -181,6 +182,25 @@ export function UserAuthContextProvider({ children }) {
     }
   };
 
+  const gameStart = async (otp) => {
+    try {
+      const hostDocRef = doc(db, "host", otp);
+      await setDoc(hostDocRef, { startGame: true }, { merge: true });
+      console.log("Lobby stopped successfully.");
+    } catch (error) {
+      console.error("Error stopping lobby:", error);
+    }
+  };
+  const gameEnd = async (otp) => {
+    try {
+      const hostDocRef = doc(db, "host", otp);
+      await setDoc(hostDocRef, { startGame: false }, { merge: true });
+      console.log("Lobby stopped successfully.");
+    } catch (error) {
+      console.error("Error stopping lobby:", error);
+    }
+  };
+
   return (
     <UserAuthContext.Provider
       value={{
@@ -192,6 +212,8 @@ export function UserAuthContextProvider({ children }) {
         setLobby,
         showLobby,
         stopLobby,
+        gameStart,
+        gameEnd,
       }}
     >
       {loading && user === null ? null : children}

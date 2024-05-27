@@ -2,11 +2,14 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useUserAuth } from "../context/UserAuthContext";
 
 const Game = (game, StarterContent) => {
-  const { setLobby, showLobby, stopLobby } = useUserAuth();
+  const { setLobby, showLobby, stopLobby, gameStart, gameEnd } = useUserAuth();
 
   const [hosting, setHosting] = useState(true);
   const [lobby, setLobbyState] = useState(false);
   const [studentsJoined, setStudentsJoined] = useState(null); // Change initial state to null
+
+  const [startGame, setStartGame] = useState(false);
+  const [endGame, setEndGame] = useState(false);
 
   const [generatedOtp, setGeneratedOtp] = useState(
     String(
@@ -23,12 +26,27 @@ const Game = (game, StarterContent) => {
     await setLobby(otp, game.game, StarterContent);
     setHosting(false);
     setLobbyState(true);
+    setStartGame(true);
+  };
+
+  const handleStartGame = async (otp) => {
+    gameStart(otp);
+    setEndGame(true);
+    setStartGame(false);
+    setEndGame(true);
+  };
+
+  const handleEndGame = async (otp) => {
+    gameEnd(otp);
+    setStartGame(true);
+    setEndGame(false);
   };
 
   const stophosting = async (otp) => {
     stopLobby(otp);
     setHosting(true);
     setLobbyState(false);
+    setStartGame(false);
     setStudentsJoined(null);
     const newotp = String(
       Math.floor(Math.random() * 999999)
@@ -82,6 +100,22 @@ const Game = (game, StarterContent) => {
           onClick={() => stophosting(generatedOtp)}
         >
           Stop Live
+        </button>
+      )}
+      {startGame && (
+        <button
+          className="bg-green-500"
+          onClick={() => handleStartGame(generatedOtp)}
+        >
+          Start Game
+        </button>
+      )}
+      {endGame && (
+        <button
+          className="bg-rose-500"
+          onClick={() => handleEndGame(generatedOtp)}
+        >
+          Game End
         </button>
       )}
     </>
