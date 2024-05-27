@@ -25,6 +25,7 @@ const Game = ({ game, StarterContent, uuid }) => {
 
   const host = async (otp) => {
     await setLobby(otp, game, StarterContent);
+    await setGameData(otp, uuid, game, StarterContent, endGame);
     setHosting(false);
     setLobbyState(true);
     setStartGame(true);
@@ -35,7 +36,6 @@ const Game = ({ game, StarterContent, uuid }) => {
       gameStart(otp);
       // Ensure all parameters are valid
       if (uuid && StarterContent && game !== undefined) {
-        await setGameData(otp, uuid, game, StarterContent, endGame);
         setEndGame(true);
         setStartGame(false);
       } else {
