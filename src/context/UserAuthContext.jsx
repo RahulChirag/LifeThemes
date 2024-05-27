@@ -12,7 +12,14 @@ import {
   signOut,
   onAuthStateChanged,
 } from "firebase/auth";
-import { doc, getDoc, setDoc, onSnapshot } from "firebase/firestore";
+import {
+  doc,
+  getDoc,
+  setDoc,
+  onSnapshot,
+  updateDoc,
+  arrayUnion,
+} from "firebase/firestore";
 
 const UserAuthContext = createContext();
 
@@ -146,11 +153,16 @@ export function UserAuthContextProvider({ children }) {
 
   const showLobby = (setStudentsJoined, otp) => {
     try {
-      if (!otp) {
+      let otpValue = otp; // Initialize otpValue with otp
+      if (otp && typeof otp === "object" && otp.current) {
+        otpValue = otp.current; // If otp is a ref, get its current value
+      }
+
+      if (!otpValue) {
         throw new Error("OTP is not set");
       }
 
-      const hostDocRef = doc(db, "host", otp);
+      const hostDocRef = doc(db, "host", otpValue);
 
       if (unsubscribe) {
         unsubscribe();
@@ -185,7 +197,9 @@ export function UserAuthContextProvider({ children }) {
   const gameStart = async (otp) => {
     try {
       const hostDocRef = doc(db, "host", otp);
+      const gameDocRef = doc(db, "games", otp);
       await setDoc(hostDocRef, { startGame: true }, { merge: true });
+      await setDoc(gameDocRef, { isGameEnded: true }, { merge: true });
       console.log("Lobby stopped successfully.");
     } catch (error) {
       console.error("Error stopping lobby:", error);
@@ -194,10 +208,116 @@ export function UserAuthContextProvider({ children }) {
   const gameEnd = async (otp) => {
     try {
       const hostDocRef = doc(db, "host", otp);
+      const gameDocRef = doc(db, "games", otp);
       await setDoc(hostDocRef, { startGame: false }, { merge: true });
+      await setDoc(gameDocRef, { isGameEnded: false }, { merge: true });
       console.log("Lobby stopped successfully.");
     } catch (error) {
       console.error("Error stopping lobby:", error);
+    }
+  };
+
+  const getDataGame = async (otp, setData) => {
+    try {
+      const hostDocRef = doc(db, "host", otp);
+
+      const unsubscribe = onSnapshot(hostDocRef, (doc) => {
+        if (doc.exists()) {
+          const hostData = doc.data();
+          setData(hostData); // Update the state with the new data
+        } else {
+          console.error("Host document not found");
+        }
+      });
+
+      return unsubscribe; // Return the unsubscribe function
+    } catch (error) {
+      console.error("Error getting game data:", error);
+      throw error;
+    }
+  };
+
+  const setPlayerUsername = async (otp, username) => {
+    try {
+      const trimmedUsername = username.trim();
+
+      const hostDocRef = doc(db, "host", otp); // Reference to the host document
+      const hostDocSnap = await getDoc(hostDocRef); // Get the host document snapshot
+
+      if (hostDocSnap.exists()) {
+        const hostData = hostDocSnap.data();
+        const studentsJoined = hostData.studentsJoined || []; // Get the studentsJoined array
+
+        // Check if the username already exists
+        if (studentsJoined.includes(trimmedUsername)) {
+          throw new Error(
+            "Username already exists. Please enter a different username."
+          );
+        }
+
+        // Update the host document to add the new username
+        await updateDoc(hostDocRef, {
+          studentsJoined: arrayUnion(trimmedUsername), // Add the new username to the studentsJoined array
+        });
+
+        console.log("Username added successfully");
+      } else {
+        throw new Error("Host document not found");
+      }
+    } catch (error) {
+      console.error("Error adding username:", error);
+      throw error; // Throw the error to handle it in the component
+    }
+  };
+
+  const addPlayer = async (otp, username) => {
+    try {
+      const trimmedUsername = username.trim();
+      const gameDocRef = doc(db, "games", otp);
+
+      // Define the player object
+      const player = {
+        username: trimmedUsername,
+        score: 0,
+      };
+
+      // Update the players array with the new player object
+      await updateDoc(gameDocRef, {
+        players: arrayUnion(player),
+      });
+
+      console.log("Player added successfully.");
+    } catch (error) {
+      console.error("Error adding player:", error);
+    }
+  };
+
+  const setGameData = async (otp, uuid, game, isStarterContent, endGame) => {
+    try {
+      if (
+        !otp ||
+        !uuid ||
+        !game ||
+        isStarterContent === undefined ||
+        endGame === undefined
+      ) {
+        throw new Error("Invalid data provided to setGameData");
+      }
+
+      // Convert isStarterContent to boolean
+      const isStarterContentBool = isStarterContent === "true";
+
+      const gameDoc = doc(db, "games", otp);
+      await setDoc(gameDoc, {
+        hostId: uuid,
+        gameName: game,
+        isStarterContent: isStarterContentBool,
+        players: [], // Initialize players array
+        isGameEnded: endGame,
+      });
+      console.log("Game data set successfully.");
+    } catch (error) {
+      console.error("Error setting game data:", error);
     }
   };
 
@@ -214,6 +334,10 @@ export function UserAuthContextProvider({ children }) {
         stopLobby,
         gameStart,
         gameEnd,
+        getDataGame,
+        setPlayerUsername,
+        setGameData,
+        addPlayer,
       }}
     >
       {loading && user === null ? null : children}

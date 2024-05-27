@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useUserAuth } from "../context/UserAuthContext";
 
-const Game = (game, StarterContent) => {
-  const { setLobby, showLobby, stopLobby, gameStart, gameEnd } = useUserAuth();
+const Game = ({ game, StarterContent, uuid }) => {
+  const { setLobby, showLobby, stopLobby, gameStart, gameEnd, setGameData } =
+    useUserAuth();
 
   const [hosting, setHosting] = useState(true);
   const [lobby, setLobbyState] = useState(false);
-  const [studentsJoined, setStudentsJoined] = useState(null); // Change initial state to null
+  const [studentsJoined, setStudentsJoined] = useState(null);
 
   const [startGame, setStartGame] = useState(false);
   const [endGame, setEndGame] = useState(false);
@@ -23,17 +24,26 @@ const Game = (game, StarterContent) => {
   );
 
   const host = async (otp) => {
-    await setLobby(otp, game.game, StarterContent);
+    await setLobby(otp, game, StarterContent);
     setHosting(false);
     setLobbyState(true);
     setStartGame(true);
   };
 
   const handleStartGame = async (otp) => {
-    gameStart(otp);
-    setEndGame(true);
-    setStartGame(false);
-    setEndGame(true);
+    try {
+      gameStart(otp);
+      // Ensure all parameters are valid
+      if (uuid && StarterContent && game !== undefined) {
+        await setGameData(otp, uuid, game, StarterContent, endGame);
+        setEndGame(true);
+        setStartGame(false);
+      } else {
+        throw new Error("Missing required data to start the game");
+      }
+    } catch (error) {
+      console.error("Error starting game:", error);
+    }
   };
 
   const handleEndGame = async (otp) => {
@@ -48,13 +58,13 @@ const Game = (game, StarterContent) => {
     setLobbyState(false);
     setStartGame(false);
     setStudentsJoined(null);
-    const newotp = String(
+    const newOtp = String(
       Math.floor(Math.random() * 999999)
         .toString()
         .padStart(6, "0")
     );
-    setGeneratedOtp(newotp);
-    setGenerateLink(`http://localhost:5173/live/${newotp}`);
+    setGeneratedOtp(newOtp);
+    setGenerateLink(`http://localhost:5173/live/${newOtp}`);
   };
 
   const initiateShowLobby = useCallback(async () => {
@@ -73,7 +83,7 @@ const Game = (game, StarterContent) => {
 
   return (
     <>
-      <h1>Game: {decodeURIComponent(game.game)}</h1>
+      <h1>Game: {decodeURIComponent(game)}</h1>
       <h1>{generatedOtp}</h1>
       <h1>{generateLink}</h1>
       {hosting && (
@@ -82,17 +92,16 @@ const Game = (game, StarterContent) => {
         </button>
       )}
       {lobby && <h2>Lobby is now live!</h2>}
-      {studentsJoined !== null &&
-        studentsJoined.length > 0 && ( // Check if studentsJoined is not null
-          <div>
-            <h3>Students Joined:</h3>
-            <ul>
-              {studentsJoined.map((student, index) => (
-                <li key={index}>{student}</li>
-              ))}
-            </ul>
-          </div>
-        )}
+      {studentsJoined !== null && studentsJoined.length > 0 && (
+        <div>
+          <h3>Students Joined:</h3>
+          <ul>
+            {studentsJoined.map((student, index) => (
+              <li key={index}>{student}</li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       {hosting || (
         <button

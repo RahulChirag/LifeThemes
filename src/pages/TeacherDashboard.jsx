@@ -76,7 +76,11 @@ const TeacherDashboard = () => {
         {parsedData ? (
           <>
             {isGame ? (
-              <Game game={game} StarterContent={isStarterContent} />
+              <Game
+                game={game}
+                StarterContent={isStarterContent}
+                uuid={user.uid}
+              />
             ) : (
               <TopicDisplay parsedData={parsedData} />
             )}
