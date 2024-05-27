@@ -82,19 +82,24 @@ const Game = ({ game, StarterContent, uuid }) => {
   }, [initiateShowLobby]);
 
   return (
-    <>
-      <h1>Game: {decodeURIComponent(game)}</h1>
-      <h1>{generatedOtp}</h1>
-      <h1>{generateLink}</h1>
+    <div className="max-w-xl mx-auto p-4">
+      <h1 className="text-3xl font-bold mb-4">
+        Game: {decodeURIComponent(game)}
+      </h1>
+      <h1 className="mb-4">OTP: {generatedOtp}</h1>
+      <h1 className="mb-4">Link: {generateLink}</h1>
       {hosting && (
-        <button className="bg-green-300" onClick={() => host(generatedOtp)}>
+        <button
+          className="bg-green-300 py-2 px-4 rounded-md mb-4"
+          onClick={() => host(generatedOtp)}
+        >
           Host Live
         </button>
       )}
-      {lobby && <h2>Lobby is now live!</h2>}
+      {lobby && <h2 className="text-xl mb-4">Lobby is now live!</h2>}
       {studentsJoined !== null && studentsJoined.length > 0 && (
-        <div>
-          <h3>Students Joined:</h3>
+        <div className="mb-4">
+          <h3 className="text-lg mb-2">Students Joined:</h3>
           <ul>
             {studentsJoined.map((student, index) => (
               <li key={index}>{student}</li>
@@ -105,7 +110,7 @@ const Game = ({ game, StarterContent, uuid }) => {
 
       {hosting || (
         <button
-          className="bg-rose-300"
+          className="bg-rose-300 py-2 px-4 rounded-md mb-4"
           onClick={() => stophosting(generatedOtp)}
         >
           Stop Live
@@ -113,7 +118,7 @@ const Game = ({ game, StarterContent, uuid }) => {
       )}
       {startGame && (
         <button
-          className="bg-green-500"
+          className="bg-green-500 py-2 px-4 rounded-md mr-2"
           onClick={() => handleStartGame(generatedOtp)}
         >
           Start Game
@@ -121,13 +126,13 @@ const Game = ({ game, StarterContent, uuid }) => {
       )}
       {endGame && (
         <button
-          className="bg-rose-500"
+          className="bg-rose-500 py-2 px-4 rounded-md"
           onClick={() => handleEndGame(generatedOtp)}
         >
           Game End
         </button>
       )}
-    </>
+    </div>
   );
 };
 
