@@ -1,0 +1,56 @@
+{
+  "gameTitle": "Components of food",
+  "gameType": "MCQ",
+  "eachQuestionDuration": 30000,
+  "questions": [
+    {
+      "id": 1,
+      "questionImage": ["/assets/topic-images/placeholder.png"],
+      "question": "Which of the following is not a component of food?",
+      "options": ["Fat", "Carbohydrate", "Protein", "Vitamin"],
+      "optionImages": [
+        "/assets/topic-images/placeholder.png",
+        "/assets/topic-images/placeholder.png",
+        "/assets/topic-images/placeholder.png"
+      ],
+      "answer": ["Vitamin"],
+      "Trivia": "Vitamin is not a component of food"
+    },
+    {
+      "id": 2,
+      "questionImage": null,
+      "question": "Which nutrients are classified as micronutrients?",
+      "options": ["Fat", "Carbohydrate", "Protein", "Vitamin"],
+      "optionImages": [
+        "/assets/topic-images/placeholder.png",
+        "/assets/topic-images/placeholder.png",
+        "/assets/topic-images/placeholder.png",
+        "/assets/topic-images/placeholder.png"
+      ],
+      "answer": ["Vitamin", "Mineral"],
+      "Trivia": "Vitamin and mineral are classified as micronutrients"
+    },
+
+    {
+      "id": 3,
+      "questionImage": ["/assets/topic-images/placeholder.png"],
+      "question": "Which nutrient is the primary source of energy for the brain and muscles during exercise?",
+      "options": ["Fat", "Carbohydrate"],
+      "optionImages": [
+        "/assets/topic-images/fat.png",
+        "/assets/topic-images/carbohydrate.png"
+      ],
+      "answer": ["Carbohydrate"],
+      "Trivia": "Carbohydrate is the primary source of energy for the brain and muscles during exercise"
+    },
+    {
+      "id": 4,
+      "questionImage": null,
+      "question": "Which nutrient aids in the absorption of fat-soluble vitamins?",
+      "options": ["Fat", "Carbohydrate", "Protein", "Vitamin"],
+      "optionImages": null,
+      "answer": ["Fat"],
+      "Trivia": null
+    }
+  ]
+}

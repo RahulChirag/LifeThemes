@@ -237,6 +237,26 @@ export function UserAuthContextProvider({ children }) {
     }
   };
 
+  const getGame = async (otp, setData) => {
+    try {
+      const gameDocRef = doc(db, "games", otp);
+
+      const unsubscribe = onSnapshot(gameDocRef, (doc) => {
+        if (doc.exists()) {
+          const hostData = doc.data();
+          setData(hostData); // Update the state with the new data
+        } else {
+          console.error("Host document not found");
+        }
+      });
+
+      return unsubscribe; // Return the unsubscribe function
+    } catch (error) {
+      console.error("Error getting game data:", error);
+      throw error;
+    }
+  };
+
   const setPlayerUsername = async (otp, username) => {
     try {
       const trimmedUsername = username.trim();
@@ -338,6 +358,7 @@ export function UserAuthContextProvider({ children }) {
         setPlayerUsername,
         setGameData,
         addPlayer,
+        getGame,
       }}
     >
       {loading && user === null ? null : children}

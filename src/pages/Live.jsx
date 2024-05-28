@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useUserAuth } from "../context/UserAuthContext";
+import PlayGame from "../components/PlayGame";
 
 const Live = () => {
   const { data: routeData } = useParams();
@@ -100,7 +101,12 @@ const Live = () => {
                       </ul>
                     </>
                   ) : (
-                    <div className=" bg-rose-300 w-full h-full">Game</div>
+                    <PlayGame
+                      otp={routeData}
+                      startGame={
+                        hostData.startGame.toString() === "true" && true
+                      }
+                    />
                   )}
                 </div>
               ) : (

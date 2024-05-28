@@ -53,9 +53,10 @@ const Game = ({ game, StarterContent, uuid }) => {
   };
 
   const stophosting = async (otp) => {
+    setLobbyState(false);
     stopLobby(otp);
     setHosting(true);
-    setLobbyState(false);
+
     setStartGame(false);
     setStudentsJoined(null);
     const newOtp = String(
