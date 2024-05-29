@@ -1,7 +1,7 @@
 {
   "gameTitle": "Components of food",
   "gameType": "MCQ",
-  "eachQuestionDuration": 30000,
+  "eachQuestionDuration": 300000,
   "questions": [
     {
       "id": 1,
@@ -20,7 +20,7 @@
       "id": 2,
       "questionImage": null,
       "question": "Which nutrients are classified as micronutrients?",
-      "options": ["Fat", "Carbohydrate", "Protein", "Vitamin"],
+      "options": ["Fat", "Vitamin", "Protein", "Mineral"],
       "optionImages": [
         "/assets/topic-images/placeholder.png",
         "/assets/topic-images/placeholder.png",
@@ -37,8 +37,8 @@
       "question": "Which nutrient is the primary source of energy for the brain and muscles during exercise?",
       "options": ["Fat", "Carbohydrate"],
       "optionImages": [
-        "/assets/topic-images/fat.png",
-        "/assets/topic-images/carbohydrate.png"
+        "/assets/topic-images/placeholder.png",
+        "/assets/topic-images/placeholder.png"
       ],
       "answer": ["Carbohydrate"],
       "Trivia": "Carbohydrate is the primary source of energy for the brain and muscles during exercise"

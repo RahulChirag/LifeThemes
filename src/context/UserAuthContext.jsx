@@ -217,14 +217,14 @@ export function UserAuthContextProvider({ children }) {
     }
   };
 
-  const getDataGame = async (otp, setData) => {
+  const getDataGame = async (otp, setGameData) => {
     try {
       const hostDocRef = doc(db, "host", otp);
 
       const unsubscribe = onSnapshot(hostDocRef, (doc) => {
         if (doc.exists()) {
           const hostData = doc.data();
-          setData(hostData); // Update the state with the new data
+          setGameData(hostData); // Update the state with the new data
         } else {
           console.error("Host document not found");
         }

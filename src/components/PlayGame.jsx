@@ -1,143 +1,100 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useUserAuth } from "../context/UserAuthContext";
+import Countdown from "../components/Countdown";
+import Question from "../components/Question";
+import GameType from "../components/GameType";
 
 const PlayGame = ({ otp, startGame }) => {
   const { getGame } = useUserAuth();
-
-  const [gameData, setGameData] = useState(null);
-  const [gameName, setGameName] = useState(null);
-  const [gameType, setGameType] = useState(null);
+  const [firebaseGameData, setFirebaseGameData] = useState(null);
   const [data, setData] = useState(null);
-  const [countdown, setCountdown] = useState(5);
-  const [showCountdown, setShowCountdown] = useState(false);
+  const [countDown, setCountDown] = useState(5);
+  const [countdownFinished, setCountdownFinished] = useState(false);
   const [showQuestion, setShowQuestion] = useState(false);
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [questionTimer, setQuestionTimer] = useState(30);
+  const [showGameType, setShowGameType] = useState(false);
+  const [gameTypeCountDown, setGameTypeCountDown] = useState(null);
+  const [score, setScore] = useState(0);
+
+  const fetchData = async () => {
+    const response = await fetch(`/games/${firebaseGameData.gameName}.json`);
+    const jsonData = await response.json();
+    setData(jsonData);
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        getGame(otp, (gameDataResponse) => {
-          setGameData(gameDataResponse);
-          fetchGameData(gameDataResponse.gameName);
+    const unsubscribe = getGame(otp, setFirebaseGameData);
+
+    return () => {
+      if (typeof unsubscribe === "function") {
+        unsubscribe();
+      }
+    };
+  }, [otp, getGame]);
+
+  useEffect(() => {
+    if (firebaseGameData) {
+      fetchData();
+    }
+  }, [firebaseGameData]);
+
+  useEffect(() => {
+    const countdownInterval = setInterval(() => {
+      setCountDown((prevCount) => {
+        if (prevCount === 0) {
+          clearInterval(countdownInterval);
+          setCountdownFinished(true);
+          setShowQuestion(true);
+          setTimeout(() => {
+            setShowQuestion(false);
+            setShowGameType(true);
+            if (data) {
+              setGameTypeCountDown(data.eachQuestionDuration);
+            }
+          }, 5000);
+        }
+        return prevCount - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(countdownInterval);
+  }, [data]);
+
+  useEffect(() => {
+    if (showGameType) {
+      setGameTypeCountDown(data.eachQuestionDuration);
+      const gameTypeInterval = setInterval(() => {
+        setGameTypeCountDown((prevCount) => {
+          if (prevCount === 0) {
+            clearInterval(gameTypeInterval);
+            setShowGameType(false);
+          }
+          return prevCount - 1;
         });
-      } catch (error) {
-        console.error("Error fetching game data:", error);
-      }
-    };
-
-    const fetchGameData = async (gameName) => {
-      try {
-        const response = await fetch(`/games/${gameName}.json`);
-
-        if (!response.ok) {
-          throw new Error(
-            `Failed to fetch game data: ${response.status} ${response.statusText}`
-          );
-        }
-
-        const responseBody = await response.text();
-
-        if (!responseBody) {
-          throw new Error("Empty response body");
-        }
-
-        const jsonData = JSON.parse(responseBody);
-        setGameName(jsonData.gameTitle);
-        setGameType(jsonData.gameType);
-        setData(jsonData);
-      } catch (error) {
-        console.error("Error fetching game data:", error);
-      }
-    };
-
-    fetchData();
-  }, [getGame, otp]);
-
-  useEffect(() => {
-    if (startGame) {
-      setShowCountdown(true);
-
-      const countdownTimer = setInterval(() => {
-        setCountdown((prevCountdown) => prevCountdown - 1);
       }, 1000);
 
-      setTimeout(() => {
-        clearInterval(countdownTimer);
-        setShowCountdown(false);
-        setShowQuestion(true);
-      }, 5000);
-
-      return () => clearInterval(countdownTimer);
+      return () => clearInterval(gameTypeInterval);
     }
-  }, [startGame]);
-
-  useEffect(() => {
-    if (showQuestion) {
-      const questionInterval = setInterval(() => {
-        setQuestionTimer((prevTimer) => prevTimer - 1);
-      }, 1000);
-
-      setTimeout(() => {
-        clearInterval(questionInterval);
-        setQuestionTimer(30);
-        setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
-        setShowQuestion(false);
-        setShowCountdown(true);
-        setCountdown(5);
-      }, 30000);
-
-      return () => clearInterval(questionInterval);
-    }
-  }, [showQuestion]);
-
-  if (!data) {
-    return <div>Loading...</div>;
-  }
-
-  const currentQuestion = data.questions[currentQuestionIndex];
+  }, [showGameType]);
 
   return (
-    <div className="p-5 text-center">
-      {startGame && (
-        <>
-          <h2 className="text-xl mt-5">Time Remaining: {questionTimer}</h2>
-          {showCountdown && (
-            <h2 className="text-xl mb-5">Countdown: {countdown}</h2>
-          )}
-          {showQuestion && currentQuestion && (
-            <div>
-              {currentQuestion.questionImage &&
-                currentQuestion.questionImage[0] && (
-                  <img
-                    src={currentQuestion.questionImage[0]}
-                    alt="Question"
-                    className="mx-auto mb-5 max-w-xs h-auto"
-                  />
-                )}
-              <h2 className="text-xl mb-5">{currentQuestion.question}</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {currentQuestion.options.map((option, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center justify-start p-4 border border-gray-300 rounded-lg"
-                  >
-                    {currentQuestion.optionImages && (
-                      <img
-                        src={currentQuestion.optionImages[index]}
-                        alt={option}
-                        className="w-16 h-16 mr-4"
-                      />
-                    )}
-                    <p className="text-lg">{option}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-        </>
+    <>
+      {countdownFinished ? (
+        showQuestion && <Question index={0} data={data} />
+      ) : (
+        <Countdown countDown={countDown} />
       )}
-    </div>
+      {showGameType && (
+        <div>
+          <GameType
+            index={0}
+            data={data}
+            gameTypeCountDown={gameTypeCountDown}
+            score={score}
+            setScore={setScore}
+          />
+        </div>
+      )}
+    </>
   );
 };
 
