@@ -106,6 +106,7 @@ const Live = () => {
                       startGame={
                         hostData.startGame.toString() === "true" && true
                       }
+                      username={username}
                     />
                   )}
                 </div>

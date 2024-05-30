@@ -1,7 +1,7 @@
 {
   "gameTitle": "Components of food",
   "gameType": "MCQ",
-  "eachQuestionDuration": 300000,
+  "eachQuestionDuration": 30,
   "questions": [
     {
       "id": 1,
@@ -13,7 +13,7 @@
         "/assets/topic-images/placeholder.png",
         "/assets/topic-images/placeholder.png"
       ],
-      "answer": ["Vitamin"],
+      "answer": ["Vitamin", "Protein"],
       "Trivia": "Vitamin is not a component of food"
     },
     {

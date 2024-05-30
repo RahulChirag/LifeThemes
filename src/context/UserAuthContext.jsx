@@ -295,20 +295,29 @@ export function UserAuthContextProvider({ children }) {
       const trimmedUsername = username.trim();
       const gameDocRef = doc(db, "games", otp);
 
-      // Define the player object
-      const player = {
-        username: trimmedUsername,
-        score: 0,
-      };
-
-      // Update the players array with the new player object
+      // Add the player to the players map
       await updateDoc(gameDocRef, {
-        players: arrayUnion(player),
+        [`players.${trimmedUsername}`]: { score: 0 },
       });
 
       console.log("Player added successfully.");
     } catch (error) {
       console.error("Error adding player:", error);
+    }
+  };
+
+  const updateScore = async (otp, username, score) => {
+    try {
+      const gameDocRef = doc(db, "games", otp);
+
+      // Update the score of the player directly in the players map
+      await updateDoc(gameDocRef, {
+        [`players.${username}.score`]: score,
+      });
+
+      console.log("Player score updated successfully.");
+    } catch (error) {
+      console.error("Error updating player score:", error);
     }
   };
 
@@ -359,6 +368,7 @@ export function UserAuthContextProvider({ children }) {
         setGameData,
         addPlayer,
         getGame,
+        updateScore,
       }}
     >
       {loading && user === null ? null : children}

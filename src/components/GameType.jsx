@@ -1,42 +1,96 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useUserAuth } from "../context/UserAuthContext";
 
 export const GameType = ({
   data,
   index,
   gameTypeCountDown,
+  setGameTypeCountDown,
   score,
   setScore,
+  onTimeUp,
+  username,
+  otp,
 }) => {
-  const [isMultipleSelectQuestion, setIsMultipleSelectQuestion] =
-    useState(false);
-  const [selectedOption, setSelectedOption] = useState(null);
+  const { updateScore } = useUserAuth();
+  const [canSelect, setCanSelect] = useState(true);
+  const [selectedOptions, setSelectedOptions] = useState([]);
+  const [correctOptions, setCorrectOptions] = useState([]);
+  const [incorrectOptions, setIncorrectOptions] = useState([]);
+  const [showCorrectness, setShowCorrectness] = useState(false);
+  const [continueTimer, setContinueTimer] = useState(true);
+  const [lastRemainingTime, setLastRemainingTime] = useState(null);
 
   const question = data.questions[index];
   const correctAnswers = question.answer;
 
   const handleClick = (option) => {
-    if (correctAnswers.length === 1) {
-      checkAnswer(option);
-      setSelectedOption(option);
-    } else {
-      setIsMultipleSelectQuestion(false);
-    }
-  };
+    if (canSelect) {
+      const newSelectedOptions = [...selectedOptions, option];
+      setSelectedOptions(newSelectedOptions);
+      if (newSelectedOptions.length === correctAnswers.length) {
+        setContinueTimer(false);
+        setLastRemainingTime(gameTypeCountDown);
+        checkAnswers(newSelectedOptions);
+        setCanSelect(false);
+        setShowCorrectness(true);
 
-  const checkAnswer = (option) => {
-    if (correctAnswers.length === 1) {
-      const isCorrect = data.questions[index].answer.includes(option);
-      if (isCorrect) {
-        console.log("Correct answer selected:", option);
-        setScore(score + 1); // Update the score
-      } else {
-        console.log("Wrong answer selected:", option);
+        setTimeout(() => {
+          onTimeUp();
+        }, 3000);
       }
     }
   };
 
-  const isOptionCorrect = (option) => {
-    return selectedOption === option && correctAnswers.includes(option);
+  useEffect(() => {
+    if (gameTypeCountDown === 0) {
+      handleScore(score);
+    }
+  }, [gameTypeCountDown]);
+
+  useEffect(() => {
+    if (continueTimer && gameTypeCountDown > 0) {
+      const timerId = setTimeout(() => {
+        setGameTypeCountDown((prevCount) => prevCount - 1);
+      }, 1000);
+
+      return () => clearTimeout(timerId);
+    }
+  }, [gameTypeCountDown, continueTimer]);
+
+  const handleScore = (updatedScore) => {
+    console.log("Current Score:", updatedScore, otp, username);
+    updateScore(otp, username, updatedScore);
+  };
+
+  const checkAnswers = (options) => {
+    const newCorrectOptions = [];
+    const newIncorrectOptions = [];
+    options.forEach((option) => {
+      if (correctAnswers.includes(option)) {
+        newCorrectOptions.push(option);
+      } else {
+        newIncorrectOptions.push(option);
+      }
+    });
+    const newScore = score + newCorrectOptions.length * 5;
+    setScore(newScore);
+    handleScore(newScore);
+    setCorrectOptions(newCorrectOptions);
+    setIncorrectOptions(newIncorrectOptions);
+  };
+
+  const getOptionClass = (option) => {
+    if (showCorrectness) {
+      if (correctOptions.includes(option)) {
+        return "bg-green-200";
+      } else if (incorrectOptions.includes(option)) {
+        return "bg-red-200";
+      }
+    } else if (selectedOptions.includes(option)) {
+      return "bg-blue-200";
+    }
+    return "";
   };
 
   return (
@@ -46,7 +100,9 @@ export const GameType = ({
           Score: {score}
         </div>
         <div className="text-lg md:text-xl lg:text-2xl font-bold">
-          Time remaining: {gameTypeCountDown}s
+          {continueTimer && gameTypeCountDown > 0
+            ? `Time remaining: ${gameTypeCountDown}s`
+            : lastRemainingTime && `Time remaining: ${lastRemainingTime}s`}
         </div>
       </div>
       <div className="flex flex-col md:flex-col lg:flex-row justify-center items-center md:items-start mb-5">
@@ -68,12 +124,12 @@ export const GameType = ({
         {question.options.map((option, i) => (
           <div
             key={i}
-            className={`flex items-center p-4 border rounded-lg shadow-sm hover:shadow-lg transition-shadow ${
-              isOptionCorrect(option) ? "bg-green-200" : ""
-            }`}
+            className={`flex items-center p-4 border rounded-lg shadow-sm hover:shadow-lg transition-shadow ${getOptionClass(
+              option
+            )}`}
             onClick={() => handleClick(option)}
           >
-            {question.optionImages[i] && (
+            {question.optionImages && question.optionImages[i] && (
               <img
                 src={question.optionImages[i]}
                 alt={`Option ${i}`}
