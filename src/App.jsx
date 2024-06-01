@@ -80,6 +80,8 @@ function App() {
         }
       />
       <Route path="/live/:data" element={<Live />} />
+      <Route path="*" element={<Navigate to="/" replace />} />{" "}
+      {/* 404 handling */}
     </Routes>
   );
 }

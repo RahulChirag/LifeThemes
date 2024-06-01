@@ -20,7 +20,7 @@ const Game = ({ game, StarterContent, uuid }) => {
     )
   );
   const [generateLink, setGenerateLink] = useState(
-    `http://localhost:5173/live/${generatedOtp}`
+    `${window.location.origin}/live/${generatedOtp}`
   );
 
   const host = async (otp) => {
@@ -65,7 +65,7 @@ const Game = ({ game, StarterContent, uuid }) => {
         .padStart(6, "0")
     );
     setGeneratedOtp(newOtp);
-    setGenerateLink(`http://localhost:5173/live/${newOtp}`);
+    setGenerateLink(`${window.location.origin}/live/${newOtp}`);
   };
 
   const initiateShowLobby = useCallback(async () => {
